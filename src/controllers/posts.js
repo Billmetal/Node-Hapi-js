@@ -1,9 +1,11 @@
+// para Exercício final de implementar os endpoints para cada operação no banco de dados (CRUD)
+
 import Boom from 'boom'
 
-class UsersController {
+class PostsController {
 
-    constructor(Users) {
-        this.Users = Users;
+    constructor(Posts) {
+        this.Posts = Posts;
     }
 
     async find(request) {
@@ -16,11 +18,11 @@ class UsersController {
 
         try {
 
-            const users = await this.Users.find(query)
-            return { users }
+            const posts = await this.Posts.find(query)
+            return { posts }
             
         } catch (error) {
-            return Boom.badRequest('Failed to find user')
+            return Boom.badRequest('Failed to find post')
         }
     }
 
@@ -28,8 +30,8 @@ class UsersController {
         
         try {
 
-            const user = new this.Users(request.payload)
-            await user.save()
+            const post = new this.Posts(request.payload)
+            await post.save()
 
             return h.response().code(201)
         } catch (error) {
@@ -42,15 +44,15 @@ class UsersController {
         const { id } = request.params
 
         try {
-            const updatedUser = await this.Users.findOneAndUpdate({ _id: id }, request.payload, {
+            const updatedPost = await this.Posts.findOneAndUpdate({ _id: id }, request.payload, {
                 new: true,
             });
 
-            if (updatedUser) {
+            if (updatedPost) {
                 return h.response().code(200)
             }
 
-            return Boom.badRequest('Could not update the user')
+            return Boom.badRequest('Could not update the post')
 
             
         } catch (error) {
@@ -59,21 +61,20 @@ class UsersController {
     }
 
     async delete(request,h) {
-        // para estudo , implementar requisição de delete
         const { id } = request.params
 
         if(!id){
-            return Boom.badRequest('User ID is missing.')
+            return Boom.badRequest('Post ID is missing.')
         }
 
         try {
-            const deletedUser = await this.Users.deleteOne({ _id: id });
+            const deletedPost = await this.Posts.deleteOne({ _id: id });
 
-            if (deletedUser.deletedCount) {
+            if (deletedPost.deletedCount) {
                 return h.response().code(200)
             }
 
-            return Boom.badRequest('Could not delete the user')
+            return Boom.badRequest('Could not delete the post')
 
             
         } catch (error) {
@@ -82,4 +83,4 @@ class UsersController {
     }
 }
 
-export default UsersController
+export default PostsController
